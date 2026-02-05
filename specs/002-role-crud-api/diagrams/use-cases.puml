@@ -1,0 +1,44 @@
+@startuml
+skinparam actorStyle awesome
+
+actor "API Client" as client
+
+rectangle "User CRUD API" {
+  usecase "Create User" as UC_U1
+  usecase "List All Users" as UC_U2
+  usecase "Get User by ID" as UC_U3
+  usecase "Update User" as UC_U4
+  usecase "Delete User" as UC_U5
+}
+
+rectangle "Role CRUD API" {
+  usecase "Create Role" as UC_R1
+  usecase "List All Roles" as UC_R2
+  usecase "Get Role by ID" as UC_R3
+  usecase "Update Role" as UC_R4
+  usecase "Delete Role" as UC_R5
+}
+
+rectangle "User-Role Management" {
+  usecase "List User's Roles" as UC_UR1
+  usecase "Assign Role to User" as UC_UR2
+  usecase "Remove Role from User" as UC_UR3
+}
+
+client --> UC_U1 : POST /users
+client --> UC_U2 : GET /users
+client --> UC_U3 : GET /users/{id}
+client --> UC_U4 : PUT /users/{id}
+client --> UC_U5 : DELETE /users/{id}
+
+client --> UC_R1 : POST /roles
+client --> UC_R2 : GET /roles
+client --> UC_R3 : GET /roles/{id}
+client --> UC_R4 : PUT /roles/{id}
+client --> UC_R5 : DELETE /roles/{id}
+
+client --> UC_UR1 : GET /users/{id}/roles
+client --> UC_UR2 : POST /users/{id}/roles/{roleId}
+client --> UC_UR3 : DELETE /users/{id}/roles/{roleId}
+
+@enduml

@@ -1,0 +1,41 @@
+@startuml
+skinparam sequenceMessageAlign center
+
+actor "API Client" as client
+participant "RoleController" as controller
+participant "RoleRepository" as repo
+database "PostgreSQL" as db
+
+client -> controller : POST /roles\n{name}
+activate controller
+
+alt name missing/empty
+  controller --> client : 400 Bad Request\n{error details}
+else valid request
+  controller -> repo : existsByName(name)
+  activate repo
+  repo -> db : SELECT COUNT(*)\nFROM roles WHERE name = ?
+  activate db
+  db --> repo : count
+  deactivate db
+  repo --> controller : boolean
+  deactivate repo
+
+  alt name already exists
+    controller --> client : 409 Conflict\n{name already taken}
+  else name is unique
+    controller -> repo : save(role)
+    activate repo
+    repo -> db : INSERT INTO roles
+    activate db
+    db --> repo : generated id
+    deactivate db
+    repo --> controller : saved Role
+    deactivate repo
+    controller --> client : 201 Created\n{id, name}
+  end
+end
+
+deactivate controller
+
+@enduml

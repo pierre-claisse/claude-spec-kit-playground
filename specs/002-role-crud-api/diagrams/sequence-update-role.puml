@@ -1,0 +1,55 @@
+@startuml
+skinparam sequenceMessageAlign center
+
+actor "API Client" as client
+participant "RoleController" as controller
+participant "RoleRepository" as repo
+database "PostgreSQL" as db
+
+client -> controller : PUT /roles/{id}\n{name}
+activate controller
+
+alt name missing/empty
+  controller --> client : 400 Bad Request\n{error details}
+else valid request
+  controller -> repo : findById(id)
+  activate repo
+  repo -> db : SELECT * FROM roles\nWHERE id = ?
+  activate db
+  db --> repo : row or empty
+  deactivate db
+  repo --> controller : Optional<Role>
+  deactivate repo
+
+  alt role not found
+    controller --> client : 404 Not Found\n{error details}
+  else role found
+    controller -> repo : existsByNameAndIdNot(name, id)
+    activate repo
+    repo -> db : SELECT COUNT(*)\nFROM roles\nWHERE name = ? AND id != ?
+    activate db
+    db --> repo : count
+    deactivate db
+    repo --> controller : boolean
+    deactivate repo
+
+    alt name already taken by another role
+      controller --> client : 409 Conflict\n{name already taken}
+    else name is unique
+      controller -> controller : update name
+      controller -> repo : save(role)
+      activate repo
+      repo -> db : UPDATE roles\nSET name = ?\nWHERE id = ?
+      activate db
+      db --> repo : updated
+      deactivate db
+      repo --> controller : updated Role
+      deactivate repo
+      controller --> client : 200 OK\n{id, name}
+    end
+  end
+end
+
+deactivate controller
+
+@enduml

@@ -101,4 +101,38 @@ Include basic integration tests that verify:
 - End-to-end behavior with valid and invalid inputs
 
 No authentication, no pagination, no filtering, no bulk operations, no additional features.
-``` 
+```
+
+```
+/speckit.plan Plan the extension of the existing application to include Role resources and the many-to-many relationship with User.
+
+Use the exact same technical choices as before:
+- Build tool: Maven (standard pom.xml with spring-boot-starter-parent)
+- Framework: Spring Boot version 3.5.10
+- Persistence: Spring Data JPA with Hibernate
+- Database: PostgreSQL only, always running in a Docker container (no embedded database, no local database allowed)
+- Testing: @SpringBootTest with Testcontainers for integration tests only
+- Runtime: ABSOLUTE AND NON-NEGOTIABLE REQUIREMENT — All code execution (development, testing, production, any environment) MUST run exclusively inside Docker containers. Never run the application, tests, or database directly on the local host machine. No local execution instructions allowed.
+
+Mandatory deliverables:
+- Updated Dockerfile if needed (multi-stage: build with Maven, run the JAR)
+- Updated docker-compose.yml to orchestrate the application container and PostgreSQL container
+
+Produce a clear project plan that includes:
+
+- Complete updated list of files and packages (highlight new or modified files)
+- Brief description of each new or modified component's responsibility
+- Separate .puml files containing full PlantUML source code for the following updated diagrams:
+  - data-model.puml: class diagram showing User, Role, and the many-to-many relationship
+  - use-cases.puml: use case diagram with an actor interacting with all use cases (User CRUD, Role CRUD, and managing roles on a User)
+  - sequence-create-role.puml
+  - sequence-list-roles.puml
+  - sequence-get-role.puml
+  - sequence-update-role.puml
+  - sequence-delete-role.puml
+  - sequence-list-user-roles.puml
+  - sequence-add-role-to-user.puml
+  - sequence-remove-role-from-user.puml
+
+Respect the constitution constraints strictly: keep everything extremely minimal, no extra layers, no additional features, no hot-reload, no devtools, no unnecessary configuration.
+```
