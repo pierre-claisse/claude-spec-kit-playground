@@ -11,7 +11,8 @@
       "Bash(docker-compose down:*)",
       "Bash(docker run:*)",
       "Bash(MSYS_NO_PATHCONV=1 docker run:*)",
-      "Bash(docker-compose:*)"
+      "Bash(docker-compose:*)",
+      "Bash(mvn compile:*)"
     ]
   }
 }

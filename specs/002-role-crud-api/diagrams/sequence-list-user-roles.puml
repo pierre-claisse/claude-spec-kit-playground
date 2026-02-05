@@ -1,0 +1,31 @@
+@startuml
+skinparam sequenceMessageAlign center
+
+actor "API Client" as client
+participant "UserController" as controller
+participant "UserRepository" as userRepo
+database "PostgreSQL" as db
+
+client -> controller : GET /users/{userId}/roles
+activate controller
+
+controller -> userRepo : findById(userId)
+activate userRepo
+userRepo -> db : SELECT * FROM users\nWHERE id = ?
+activate db
+db --> userRepo : row or empty
+deactivate db
+userRepo --> controller : Optional<User>
+deactivate userRepo
+
+alt user not found
+  controller --> client : 404 Not Found\n{user not found}
+else user found
+  controller -> controller : user.getRoles()
+  note right: Lazy load triggers\njoin table query
+  controller --> client : 200 OK\n[{id, name}, ...]
+end
+
+deactivate controller
+
+@enduml

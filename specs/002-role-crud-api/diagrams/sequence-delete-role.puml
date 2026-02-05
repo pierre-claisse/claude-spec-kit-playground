@@ -1,0 +1,50 @@
+@startuml
+skinparam sequenceMessageAlign center
+
+actor "API Client" as client
+participant "RoleController" as controller
+participant "RoleRepository" as repo
+database "PostgreSQL" as db
+
+client -> controller : DELETE /roles/{id}
+activate controller
+
+controller -> repo : findById(id)
+activate repo
+repo -> db : SELECT * FROM roles\nWHERE id = ?
+activate db
+db --> repo : row or empty
+deactivate db
+repo --> controller : Optional<Role>
+deactivate repo
+
+alt role not found
+  controller --> client : 404 Not Found\n{error details}
+else role found
+  controller -> repo : countUsersByRoleId(id)
+  activate repo
+  repo -> db : SELECT COUNT(*)\nFROM user_roles\nWHERE role_id = ?
+  activate db
+  db --> repo : count
+  deactivate db
+  repo --> controller : count
+  deactivate repo
+
+  alt role is assigned to users
+    controller --> client : 409 Conflict\n{role is in use}
+  else role has no assignments
+    controller -> repo : deleteById(id)
+    activate repo
+    repo -> db : DELETE FROM roles\nWHERE id = ?
+    activate db
+    db --> repo : deleted
+    deactivate db
+    repo --> controller : void
+    deactivate repo
+    controller --> client : 204 No Content
+  end
+end
+
+deactivate controller
+
+@enduml

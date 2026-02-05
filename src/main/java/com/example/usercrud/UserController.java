@@ -1,9 +1,12 @@
 package com.example.usercrud;
 
 import jakarta.validation.Valid;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,9 +21,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
 
-    public UserController(UserRepository userRepository) {
+    public UserController(UserRepository userRepository, RoleRepository roleRepository) {
         this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
     }
 
     @PostMapping
@@ -62,6 +67,59 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
         userRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{userId}/roles")
+    @Transactional(readOnly = true)
+    public ResponseEntity<Set<Role>> getUserRoles(@PathVariable Long userId) {
+        return userRepository.findById(userId)
+                .map(user -> {
+                    Set<Role> roles = new HashSet<>(user.getRoles());
+                    return ResponseEntity.ok(roles);
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping("/{userId}/roles/{roleId}")
+    @Transactional
+    public ResponseEntity<Role> addRoleToUser(@PathVariable Long userId, @PathVariable Long roleId) {
+        var userOpt = userRepository.findById(userId);
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        var roleOpt = roleRepository.findById(roleId);
+        if (roleOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        User user = userOpt.get();
+        Role role = roleOpt.get();
+        if (user.getRoles().contains(role)) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+        user.getRoles().add(role);
+        userRepository.save(user);
+        return ResponseEntity.ok(role);
+    }
+
+    @DeleteMapping("/{userId}/roles/{roleId}")
+    @Transactional
+    public ResponseEntity<Void> removeRoleFromUser(@PathVariable Long userId, @PathVariable Long roleId) {
+        var userOpt = userRepository.findById(userId);
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        var roleOpt = roleRepository.findById(roleId);
+        if (roleOpt.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        User user = userOpt.get();
+        Role role = roleOpt.get();
+        if (!user.getRoles().contains(role)) {
+            return ResponseEntity.notFound().build();
+        }
+        user.getRoles().remove(role);
+        userRepository.save(user);
         return ResponseEntity.noContent().build();
     }
 }

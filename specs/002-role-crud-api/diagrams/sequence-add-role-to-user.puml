@@ -1,0 +1,58 @@
+@startuml
+skinparam sequenceMessageAlign center
+
+actor "API Client" as client
+participant "UserController" as controller
+participant "UserRepository" as userRepo
+participant "RoleRepository" as roleRepo
+database "PostgreSQL" as db
+
+client -> controller : POST /users/{userId}/roles/{roleId}
+activate controller
+
+controller -> userRepo : findById(userId)
+activate userRepo
+userRepo -> db : SELECT * FROM users\nWHERE id = ?
+activate db
+db --> userRepo : row or empty
+deactivate db
+userRepo --> controller : Optional<User>
+deactivate userRepo
+
+alt user not found
+  controller --> client : 404 Not Found\n{user not found}
+else user found
+  controller -> roleRepo : findById(roleId)
+  activate roleRepo
+  roleRepo -> db : SELECT * FROM roles\nWHERE id = ?
+  activate db
+  db --> roleRepo : row or empty
+  deactivate db
+  roleRepo --> controller : Optional<Role>
+  deactivate roleRepo
+
+  alt role not found
+    controller --> client : 404 Not Found\n{role not found}
+  else role found
+    controller -> controller : check user.getRoles()\n.contains(role)
+
+    alt role already assigned
+      controller --> client : 409 Conflict\n{role already assigned}
+    else role not yet assigned
+      controller -> controller : user.getRoles().add(role)
+      controller -> userRepo : save(user)
+      activate userRepo
+      userRepo -> db : INSERT INTO user_roles\n(user_id, role_id)
+      activate db
+      db --> userRepo : inserted
+      deactivate db
+      userRepo --> controller : saved User
+      deactivate userRepo
+      controller --> client : 200 OK\n{id, name}
+    end
+  end
+end
+
+deactivate controller
+
+@enduml

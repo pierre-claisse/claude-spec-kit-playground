@@ -1,0 +1,58 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class User {
+  - id : Long
+  - name : String
+  - email : String
+  - roles : Set<Role>
+  + getId() : Long
+  + getName() : String
+  + getEmail() : String
+  + getRoles() : Set<Role>
+  + setName(name : String) : void
+  + setEmail(email : String) : void
+  + setRoles(roles : Set<Role>) : void
+}
+
+class Role {
+  - id : Long
+  - name : String
+  - users : Set<User>
+  + getId() : Long
+  + getName() : String
+  + getUsers() : Set<User>
+  + setName(name : String) : void
+}
+
+User "0..*" -- "0..*" Role : has >
+
+note right of User
+  JPA Entity
+  @Entity
+  @Table(name = "users")
+
+  id: @Id @GeneratedValue
+  name: @NotBlank
+  email: @NotBlank
+  roles: @ManyToMany (owns)
+end note
+
+note left of Role
+  JPA Entity
+  @Entity
+  @Table(name = "roles")
+
+  id: @Id @GeneratedValue
+  name: @NotBlank @Column(unique=true)
+  users: @ManyToMany(mappedBy="roles")
+end note
+
+note bottom of User
+  Join table: user_roles
+  - user_id (FK)
+  - role_id (FK)
+  Primary key: (user_id, role_id)
+end note
+
+@enduml
