@@ -1,0 +1,20 @@
+@startuml
+skinparam actorStyle awesome
+
+actor "API Client" as client
+
+rectangle "User CRUD API" {
+  usecase "Create User" as UC1
+  usecase "List All Users" as UC2
+  usecase "Get User by ID" as UC3
+  usecase "Update User" as UC4
+  usecase "Delete User" as UC5
+}
+
+client --> UC1 : POST /users
+client --> UC2 : GET /users
+client --> UC3 : GET /users/{id}
+client --> UC4 : PUT /users/{id}
+client --> UC5 : DELETE /users/{id}
+
+@enduml

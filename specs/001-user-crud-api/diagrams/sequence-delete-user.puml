@@ -1,0 +1,37 @@
+@startuml
+skinparam sequenceMessageAlign center
+
+actor "API Client" as client
+participant "UserController" as controller
+participant "UserRepository" as repo
+database "PostgreSQL" as db
+
+client -> controller : DELETE /users/{id}
+activate controller
+
+controller -> repo : existsById(id)
+activate repo
+repo -> db : SELECT COUNT(*)\nFROM users WHERE id = ?
+activate db
+db --> repo : count
+deactivate db
+repo --> controller : boolean
+deactivate repo
+
+alt user not found
+  controller --> client : 404 Not Found\n{error details}
+else user found
+  controller -> repo : deleteById(id)
+  activate repo
+  repo -> db : DELETE FROM users\nWHERE id = ?
+  activate db
+  db --> repo : deleted
+  deactivate db
+  repo --> controller : void
+  deactivate repo
+  controller --> client : 204 No Content
+end
+
+deactivate controller
+
+@enduml

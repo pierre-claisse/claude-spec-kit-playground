@@ -1,0 +1,24 @@
+@startuml
+skinparam sequenceMessageAlign center
+
+actor "API Client" as client
+participant "UserController" as controller
+participant "UserRepository" as repo
+database "PostgreSQL" as db
+
+client -> controller : GET /users
+activate controller
+
+controller -> repo : findAll()
+activate repo
+repo -> db : SELECT * FROM users
+activate db
+db --> repo : rows
+deactivate db
+repo --> controller : List<User>
+deactivate repo
+
+controller --> client : 200 OK\n[{id, name, email}, ...]
+deactivate controller
+
+@enduml

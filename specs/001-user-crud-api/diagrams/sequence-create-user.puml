@@ -1,0 +1,28 @@
+@startuml
+skinparam sequenceMessageAlign center
+
+actor "API Client" as client
+participant "UserController" as controller
+participant "UserRepository" as repo
+database "PostgreSQL" as db
+
+client -> controller : POST /users\n{name, email}
+activate controller
+
+alt name or email missing/empty
+  controller --> client : 400 Bad Request\n{error details}
+else valid request
+  controller -> repo : save(user)
+  activate repo
+  repo -> db : INSERT INTO users
+  activate db
+  db --> repo : generated id
+  deactivate db
+  repo --> controller : saved User
+  deactivate repo
+  controller --> client : 201 Created\n{id, name, email}
+end
+
+deactivate controller
+
+@enduml

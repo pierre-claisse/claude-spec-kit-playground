@@ -1,0 +1,38 @@
+@startuml
+skinparam sequenceMessageAlign center
+
+actor "API Client" as client
+participant "UserController" as controller
+participant "UserRepository" as repo
+database "PostgreSQL" as db
+
+client -> controller : PUT /users/{id}\n{name, email}
+activate controller
+
+controller -> repo : findById(id)
+activate repo
+repo -> db : SELECT * FROM users\nWHERE id = ?
+activate db
+db --> repo : row or empty
+deactivate db
+repo --> controller : Optional<User>
+deactivate repo
+
+alt user not found
+  controller --> client : 404 Not Found\n{error details}
+else user found
+  controller -> controller : update fields\n(if provided)
+  controller -> repo : save(user)
+  activate repo
+  repo -> db : UPDATE users\nSET name=?, email=?\nWHERE id=?
+  activate db
+  db --> repo : updated
+  deactivate db
+  repo --> controller : updated User
+  deactivate repo
+  controller --> client : 200 OK\n{id, name, email}
+end
+
+deactivate controller
+
+@enduml
