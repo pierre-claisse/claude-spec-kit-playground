@@ -14,14 +14,8 @@ docker-compose up --build
 ## Run Tests
 
 ```bash
-# Run integration tests inside Docker
-docker-compose run --rm app ./mvnw test
-```
-
-Or build and test in a single command:
-
-```bash
-docker build --target test -t user-crud-api-test .
+# Run integration tests inside Docker (uses Testcontainers)
+docker-compose -f docker-compose.test.yml run --rm test
 ```
 
 ## Stop the Application
@@ -84,6 +78,7 @@ curl -X DELETE http://localhost:8080/users/1
 ├── pom.xml
 ├── Dockerfile
 ├── docker-compose.yml
+├── docker-compose.test.yml
 └── src/
     ├── main/
     │   ├── java/com/example/usercrud/

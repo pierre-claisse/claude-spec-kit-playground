@@ -152,6 +152,7 @@ components:
 
     UpdateUserRequest:
       type: object
+      minProperties: 1
       properties:
         name:
           type: string

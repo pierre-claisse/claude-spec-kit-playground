@@ -1,0 +1,17 @@
+services:
+  test:
+    image: maven:3.9-eclipse-temurin-21
+    volumes:
+      - .:/app
+      - maven-cache:/root/.m2
+      - /var/run/docker.sock:/var/run/docker.sock
+    working_dir: /app
+    environment:
+      TESTCONTAINERS_RYUK_DISABLED: "true"
+      TESTCONTAINERS_HOST_OVERRIDE: "host.docker.internal"
+      DOCKER_HOST: "unix:///var/run/docker.sock"
+    command: mvn test
+    network_mode: host
+
+volumes:
+  maven-cache:

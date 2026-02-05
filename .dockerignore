@@ -1,0 +1,27 @@
+# Git
+.git/
+.gitignore
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# Build output
+target/
+
+# Docker files
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+
+# Docs
+*.md
+specs/
+.specify/
+
+# Environment
+.env*
+
+# Logs
+*.log

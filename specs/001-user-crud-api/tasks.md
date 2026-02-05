@@ -26,10 +26,10 @@
 
 **Purpose**: Project initialization and Docker configuration
 
-- [ ] T001 Create Maven project directory structure: src/main/java/com/example/usercrud/, src/main/resources/, src/test/java/com/example/usercrud/
-- [ ] T002 Create pom.xml with Spring Boot 3.5.10 parent, spring-boot-starter-web, spring-boot-starter-data-jpa, postgresql, spring-boot-starter-test, testcontainers dependencies
-- [ ] T003 [P] Create Dockerfile with multi-stage build (Maven build stage, JRE runtime stage)
-- [ ] T004 [P] Create docker-compose.yml with app and PostgreSQL containers
+- [x] T001 Create Maven project directory structure: src/main/java/com/example/usercrud/, src/main/resources/, src/test/java/com/example/usercrud/
+- [x] T002 Create pom.xml with Spring Boot 3.5.10 parent, spring-boot-starter-web, spring-boot-starter-data-jpa, postgresql, spring-boot-starter-test, testcontainers dependencies
+- [x] T003 [P] Create Dockerfile with multi-stage build (Maven build stage, JRE runtime stage)
+- [x] T004 [P] Create docker-compose.yml with app and PostgreSQL containers
 
 **Checkpoint**: Project structure ready, Docker files created
 
@@ -41,11 +41,11 @@
 
 **CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T005 Create application.properties in src/main/resources/ with PostgreSQL connection using environment variables
-- [ ] T006 Create UserCrudApplication.java in src/main/java/com/example/usercrud/ with @SpringBootApplication
-- [ ] T007 Create User.java JPA entity in src/main/java/com/example/usercrud/ with id (Long, @Id, @GeneratedValue), name (@NotBlank), email (@NotBlank)
-- [ ] T008 Create UserRepository.java interface in src/main/java/com/example/usercrud/ extending JpaRepository<User, Long>
-- [ ] T009 Create UserController.java in src/main/java/com/example/usercrud/ with @RestController, @RequestMapping("/users"), and UserRepository injection
+- [x] T005 Create application.properties in src/main/resources/ with PostgreSQL connection using environment variables
+- [x] T006 Create UserCrudApplication.java in src/main/java/com/example/usercrud/ with @SpringBootApplication
+- [x] T007 Create User.java JPA entity in src/main/java/com/example/usercrud/ with id (Long, @Id, @GeneratedValue), name (@NotBlank), email (@NotBlank)
+- [x] T008 Create UserRepository.java interface in src/main/java/com/example/usercrud/ extending JpaRepository<User, Long>
+- [x] T009 Create UserController.java in src/main/java/com/example/usercrud/ with @RestController, @RequestMapping("/users"), and UserRepository injection
 
 **Checkpoint**: Foundation ready - application can start and connect to database
 
@@ -59,14 +59,14 @@
 
 ### Implementation for User Story 1
 
-- [ ] T010 [US1] Implement POST /users endpoint in src/main/java/com/example/usercrud/UserController.java: accept JSON body with name/email, save to repository, return 201 with saved user
+- [x] T010 [US1] Implement POST /users endpoint in src/main/java/com/example/usercrud/UserController.java: accept JSON body with name/email, save to repository, return 201 with saved user
 
 ### Tests for User Story 1
 
-- [ ] T011 [US1] Create UserControllerIntegrationTest.java in src/test/java/com/example/usercrud/ with @SpringBootTest, Testcontainers PostgreSQL setup
-- [ ] T012 [US1] Add test: POST /users with valid name and email returns 201 and user with generated ID
-- [ ] T013 [US1] Add test: POST /users with missing name returns 400
-- [ ] T014 [US1] Add test: POST /users with missing email returns 400
+- [x] T011 [US1] Create UserControllerIntegrationTest.java in src/test/java/com/example/usercrud/ with @SpringBootTest, Testcontainers PostgreSQL setup
+- [x] T012 [US1] Add test: POST /users with valid name and email returns 201 and user with generated ID
+- [x] T013 [US1] Add test: POST /users with missing name returns 400
+- [x] T014 [US1] Add test: POST /users with missing email returns 400
 
 **Checkpoint**: User Story 1 complete - can create users via POST /users
 
@@ -80,15 +80,15 @@
 
 ### Implementation for User Story 2
 
-- [ ] T015 [US2] Implement GET /users endpoint in src/main/java/com/example/usercrud/UserController.java: return list of all users
-- [ ] T016 [US2] Implement GET /users/{id} endpoint in src/main/java/com/example/usercrud/UserController.java: return user by ID or 404 if not found
+- [x] T015 [US2] Implement GET /users endpoint in src/main/java/com/example/usercrud/UserController.java: return list of all users
+- [x] T016 [US2] Implement GET /users/{id} endpoint in src/main/java/com/example/usercrud/UserController.java: return user by ID or 404 if not found
 
 ### Tests for User Story 2
 
-- [ ] T017 [US2] Add test: GET /users returns 200 with JSON array of users
-- [ ] T018 [US2] Add test: GET /users on empty database returns 200 with empty array
-- [ ] T019 [US2] Add test: GET /users/{id} with existing ID returns 200 with user data
-- [ ] T020 [US2] Add test: GET /users/{id} with non-existent ID returns 404
+- [x] T017 [US2] Add test: GET /users returns 200 with JSON array of users
+- [x] T018 [US2] Add test: GET /users on empty database returns 200 with empty array
+- [x] T019 [US2] Add test: GET /users/{id} with existing ID returns 200 with user data
+- [x] T020 [US2] Add test: GET /users/{id} with non-existent ID returns 404
 
 **Checkpoint**: User Stories 1 and 2 complete - can create and read users
 
@@ -102,13 +102,13 @@
 
 ### Implementation for User Story 3
 
-- [ ] T021 [US3] Implement PUT /users/{id} endpoint in src/main/java/com/example/usercrud/UserController.java: find user, update provided fields, save, return updated user or 404
+- [x] T021 [US3] Implement PUT /users/{id} endpoint in src/main/java/com/example/usercrud/UserController.java: find user, update provided fields, save, return updated user or 404
 
 ### Tests for User Story 3
 
-- [ ] T022 [US3] Add test: PUT /users/{id} with new name updates and returns 200
-- [ ] T023 [US3] Add test: PUT /users/{id} with new email updates and returns 200
-- [ ] T024 [US3] Add test: PUT /users/{id} with non-existent ID returns 404
+- [x] T022 [US3] Add test: PUT /users/{id} with new name updates and returns 200
+- [x] T023 [US3] Add test: PUT /users/{id} with new email updates and returns 200
+- [x] T024 [US3] Add test: PUT /users/{id} with non-existent ID returns 404
 
 **Checkpoint**: User Stories 1-3 complete - can create, read, and update users
 
@@ -122,12 +122,12 @@
 
 ### Implementation for User Story 4
 
-- [ ] T025 [US4] Implement DELETE /users/{id} endpoint in src/main/java/com/example/usercrud/UserController.java: check if exists, delete, return 204 or 404
+- [x] T025 [US4] Implement DELETE /users/{id} endpoint in src/main/java/com/example/usercrud/UserController.java: check if exists, delete, return 204 or 404
 
 ### Tests for User Story 4
 
-- [ ] T026 [US4] Add test: DELETE /users/{id} with existing ID returns 204 and user is removed
-- [ ] T027 [US4] Add test: DELETE /users/{id} with non-existent ID returns 404
+- [x] T026 [US4] Add test: DELETE /users/{id} with existing ID returns 204 and user is removed
+- [x] T027 [US4] Add test: DELETE /users/{id} with non-existent ID returns 404
 
 **Checkpoint**: All user stories complete - full CRUD functionality
 
@@ -137,9 +137,9 @@
 
 **Purpose**: Final validation and documentation
 
-- [ ] T028 Build and run application with docker-compose up --build
-- [ ] T029 Validate all quickstart.md instructions work correctly
-- [ ] T030 Run all integration tests via docker-compose run --rm app ./mvnw test
+- [x] T028 Build and run application with docker-compose up --build
+- [x] T029 Validate all quickstart.md instructions work correctly
+- [x] T030 Run all integration tests via docker-compose -f docker-compose.test.yml run --rm test
 
 ---
 
