@@ -1,0 +1,25 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class User {
+  - id : Long
+  - name : String
+  - email : String
+  + getId() : Long
+  + getName() : String
+  + getEmail() : String
+  + setName(name : String) : void
+  + setEmail(email : String) : void
+}
+
+note right of User
+  JPA Entity
+  @Entity
+  @Table(name = "users")
+
+  id: @Id @GeneratedValue
+  name: @NotBlank
+  email: @NotBlank
+end note
+
+@enduml
