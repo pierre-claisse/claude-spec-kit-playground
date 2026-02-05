@@ -136,3 +136,5 @@ Produce a clear project plan that includes:
 
 Respect the constitution constraints strictly: keep everything extremely minimal, no extra layers, no additional features, no hot-reload, no devtools, no unnecessary configuration.
 ```
+
+After this, run tasks, analyse and implement commands.

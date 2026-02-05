@@ -1,40 +1,30 @@
 package com.example.usercrud;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "users")
-public class User {
+@Table(name = "roles")
+public class Role {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
+    @Column(unique = true)
     private String name;
 
-    @NotBlank
-    private String email;
-
-    @ManyToMany
-    @JoinTable(
-        name = "user_roles",
-        joinColumns = @JoinColumn(name = "user_id"),
-        inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
+    @ManyToMany(mappedBy = "roles")
     @JsonIgnore
-    private Set<Role> roles = new HashSet<>();
+    private Set<User> users = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -52,19 +42,11 @@ public class User {
         this.name = name;
     }
 
-    public String getEmail() {
-        return email;
+    public Set<User> getUsers() {
+        return users;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public Set<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
+    public void setUsers(Set<User> users) {
+        this.users = users;
     }
 }

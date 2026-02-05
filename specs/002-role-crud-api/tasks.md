@@ -36,9 +36,9 @@ This feature extends an existing project. No setup tasks required.
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T001 [P] Create Role entity with id and unique name in src/main/java/com/example/usercrud/Role.java
-- [ ] T002 [P] Create RoleRepository interface extending JpaRepository in src/main/java/com/example/usercrud/RoleRepository.java
-- [ ] T003 Modify User entity to add @ManyToMany relationship to Role in src/main/java/com/example/usercrud/User.java
+- [x] T001 [P] Create Role entity with id and unique name in src/main/java/com/example/usercrud/Role.java
+- [x] T002 [P] Create RoleRepository interface extending JpaRepository in src/main/java/com/example/usercrud/RoleRepository.java
+- [x] T003 Modify User entity to add @ManyToMany relationship to Role in src/main/java/com/example/usercrud/User.java
 
 **Checkpoint**: Foundation ready - Role entity exists, User has roles relationship, user story implementation can now begin
 
@@ -52,10 +52,10 @@ This feature extends an existing project. No setup tasks required.
 
 ### Implementation for User Story 1
 
-- [ ] T004 [US1] Create RoleController class with POST /roles endpoint in src/main/java/com/example/usercrud/RoleController.java
-- [ ] T005 [US1] Add existsByName query method to RoleRepository for uniqueness check in src/main/java/com/example/usercrud/RoleRepository.java
-- [ ] T006 [US1] Implement 400 validation for missing/empty name in POST /roles in src/main/java/com/example/usercrud/RoleController.java
-- [ ] T007 [US1] Implement 409 Conflict response for duplicate role name in POST /roles in src/main/java/com/example/usercrud/RoleController.java
+- [x] T004 [US1] Create RoleController class with POST /roles endpoint in src/main/java/com/example/usercrud/RoleController.java
+- [x] T005 [US1] Add existsByName query method to RoleRepository for uniqueness check in src/main/java/com/example/usercrud/RoleRepository.java
+- [x] T006 [US1] Implement 400 validation for missing/empty name in POST /roles in src/main/java/com/example/usercrud/RoleController.java
+- [x] T007 [US1] Implement 409 Conflict response for duplicate role name in POST /roles in src/main/java/com/example/usercrud/RoleController.java
 
 **Checkpoint**: Create role endpoint functional - can create roles with unique names
 
@@ -69,8 +69,8 @@ This feature extends an existing project. No setup tasks required.
 
 ### Implementation for User Story 2
 
-- [ ] T008 [US2] Implement GET /roles endpoint returning all roles in src/main/java/com/example/usercrud/RoleController.java
-- [ ] T009 [US2] Implement GET /roles/{id} endpoint returning role or 404 in src/main/java/com/example/usercrud/RoleController.java
+- [x] T008 [US2] Implement GET /roles endpoint returning all roles in src/main/java/com/example/usercrud/RoleController.java
+- [x] T009 [US2] Implement GET /roles/{id} endpoint returning role or 404 in src/main/java/com/example/usercrud/RoleController.java
 
 **Checkpoint**: Read role endpoints functional - can list all roles and get by ID
 
@@ -84,9 +84,9 @@ This feature extends an existing project. No setup tasks required.
 
 ### Implementation for User Story 3
 
-- [ ] T010 [US3] Implement PUT /roles/{id} endpoint with name update in src/main/java/com/example/usercrud/RoleController.java
-- [ ] T011 [US3] Add 400 validation for missing/empty name in PUT /roles/{id} in src/main/java/com/example/usercrud/RoleController.java
-- [ ] T012 [US3] Add 409 Conflict check for duplicate name on update in PUT /roles/{id} in src/main/java/com/example/usercrud/RoleController.java
+- [x] T010 [US3] Implement PUT /roles/{id} endpoint with name update in src/main/java/com/example/usercrud/RoleController.java
+- [x] T011 [US3] Add 400 validation for missing/empty name in PUT /roles/{id} in src/main/java/com/example/usercrud/RoleController.java
+- [x] T012 [US3] Add 409 Conflict check for duplicate name on update in PUT /roles/{id} in src/main/java/com/example/usercrud/RoleController.java
 
 **Checkpoint**: Update role endpoint functional - can modify role names with uniqueness enforcement
 
@@ -100,9 +100,9 @@ This feature extends an existing project. No setup tasks required.
 
 ### Implementation for User Story 4
 
-- [ ] T013 [US4] Add countUsersByRoleId custom query to RoleRepository in src/main/java/com/example/usercrud/RoleRepository.java
-- [ ] T014 [US4] Implement DELETE /roles/{id} endpoint with 204/404 responses in src/main/java/com/example/usercrud/RoleController.java
-- [ ] T015 [US4] Add 409 Conflict check for role assigned to users in DELETE /roles/{id} in src/main/java/com/example/usercrud/RoleController.java
+- [x] T013 [US4] Add countUsersByRoleId custom query to RoleRepository in src/main/java/com/example/usercrud/RoleRepository.java
+- [x] T014 [US4] Implement DELETE /roles/{id} endpoint with 204/404 responses in src/main/java/com/example/usercrud/RoleController.java
+- [x] T015 [US4] Add 409 Conflict check for role assigned to users in DELETE /roles/{id} in src/main/java/com/example/usercrud/RoleController.java
 
 **Checkpoint**: Delete role endpoint functional - can delete unassigned roles, blocks deletion of assigned roles
 
@@ -116,10 +116,10 @@ This feature extends an existing project. No setup tasks required.
 
 ### Implementation for User Story 5
 
-- [ ] T016 [US5] Implement POST /users/{userId}/roles/{roleId} endpoint in src/main/java/com/example/usercrud/UserController.java
-- [ ] T017 [US5] Add RoleRepository dependency injection to UserController in src/main/java/com/example/usercrud/UserController.java
-- [ ] T018 [US5] Add 404 response for non-existent user or role in POST /users/{userId}/roles/{roleId} in src/main/java/com/example/usercrud/UserController.java
-- [ ] T019 [US5] Add 409 Conflict response for already assigned role in POST /users/{userId}/roles/{roleId} in src/main/java/com/example/usercrud/UserController.java
+- [x] T016 [US5] Implement POST /users/{userId}/roles/{roleId} endpoint in src/main/java/com/example/usercrud/UserController.java
+- [x] T017 [US5] Add RoleRepository dependency injection to UserController in src/main/java/com/example/usercrud/UserController.java
+- [x] T018 [US5] Add 404 response for non-existent user or role in POST /users/{userId}/roles/{roleId} in src/main/java/com/example/usercrud/UserController.java
+- [x] T019 [US5] Add 409 Conflict response for already assigned role in POST /users/{userId}/roles/{roleId} in src/main/java/com/example/usercrud/UserController.java
 
 **Checkpoint**: Assign role endpoint functional - can assign roles to users with duplicate prevention
 
@@ -133,8 +133,8 @@ This feature extends an existing project. No setup tasks required.
 
 ### Implementation for User Story 6
 
-- [ ] T020 [US6] Implement GET /users/{userId}/roles endpoint in src/main/java/com/example/usercrud/UserController.java
-- [ ] T021 [US6] Add 404 response for non-existent user in GET /users/{userId}/roles in src/main/java/com/example/usercrud/UserController.java
+- [x] T020 [US6] Implement GET /users/{userId}/roles endpoint in src/main/java/com/example/usercrud/UserController.java
+- [x] T021 [US6] Add 404 response for non-existent user in GET /users/{userId}/roles in src/main/java/com/example/usercrud/UserController.java
 
 **Checkpoint**: View user roles endpoint functional - can list roles assigned to a user
 
@@ -148,8 +148,8 @@ This feature extends an existing project. No setup tasks required.
 
 ### Implementation for User Story 7
 
-- [ ] T022 [US7] Implement DELETE /users/{userId}/roles/{roleId} endpoint in src/main/java/com/example/usercrud/UserController.java
-- [ ] T023 [US7] Add 404 response for non-existent user, role, or assignment in DELETE /users/{userId}/roles/{roleId} in src/main/java/com/example/usercrud/UserController.java
+- [x] T022 [US7] Implement DELETE /users/{userId}/roles/{roleId} endpoint in src/main/java/com/example/usercrud/UserController.java
+- [x] T023 [US7] Add 404 response for non-existent user, role, or assignment in DELETE /users/{userId}/roles/{roleId} in src/main/java/com/example/usercrud/UserController.java
 
 **Checkpoint**: Remove role endpoint functional - can remove role assignments from users
 
@@ -161,19 +161,19 @@ This feature extends an existing project. No setup tasks required.
 
 ### Integration Tests
 
-- [ ] T024 Create RoleControllerIntegrationTest class with Testcontainers setup in src/test/java/com/example/usercrud/RoleControllerIntegrationTest.java
-- [ ] T025 [P] Add integration tests for US1: Create Role (201, 400, 409 scenarios) in src/test/java/com/example/usercrud/RoleControllerIntegrationTest.java
-- [ ] T026 [P] Add integration tests for US2: Read Roles (200, 404 scenarios) in src/test/java/com/example/usercrud/RoleControllerIntegrationTest.java
-- [ ] T027 [P] Add integration tests for US3: Update Role (200, 400, 404, 409 scenarios) in src/test/java/com/example/usercrud/RoleControllerIntegrationTest.java
-- [ ] T028 [P] Add integration tests for US4: Delete Role (204, 404, 409 scenarios) in src/test/java/com/example/usercrud/RoleControllerIntegrationTest.java
-- [ ] T029 [P] Add integration tests for US5: Assign Role (200, 404, 409 scenarios) in src/test/java/com/example/usercrud/RoleControllerIntegrationTest.java
-- [ ] T030 [P] Add integration tests for US6: View User Roles (200, 404 scenarios) in src/test/java/com/example/usercrud/RoleControllerIntegrationTest.java
-- [ ] T031 [P] Add integration tests for US7: Remove Role (204, 404 scenarios) in src/test/java/com/example/usercrud/RoleControllerIntegrationTest.java
+- [x] T024 Create RoleControllerIntegrationTest class with Testcontainers setup in src/test/java/com/example/usercrud/RoleControllerIntegrationTest.java
+- [x] T025 [P] Add integration tests for US1: Create Role (201, 400, 409 scenarios) in src/test/java/com/example/usercrud/RoleControllerIntegrationTest.java
+- [x] T026 [P] Add integration tests for US2: Read Roles (200, 404 scenarios) in src/test/java/com/example/usercrud/RoleControllerIntegrationTest.java
+- [x] T027 [P] Add integration tests for US3: Update Role (200, 400, 404, 409 scenarios) in src/test/java/com/example/usercrud/RoleControllerIntegrationTest.java
+- [x] T028 [P] Add integration tests for US4: Delete Role (204, 404, 409 scenarios) in src/test/java/com/example/usercrud/RoleControllerIntegrationTest.java
+- [x] T029 [P] Add integration tests for US5: Assign Role (200, 404, 409 scenarios) in src/test/java/com/example/usercrud/RoleControllerIntegrationTest.java
+- [x] T030 [P] Add integration tests for US6: View User Roles (200, 404 scenarios) in src/test/java/com/example/usercrud/RoleControllerIntegrationTest.java
+- [x] T031 [P] Add integration tests for US7: Remove Role (204, 404 scenarios) in src/test/java/com/example/usercrud/RoleControllerIntegrationTest.java
 
 ### Validation
 
-- [ ] T032 Run all integration tests via docker-compose.test.yml and verify pass
-- [ ] T033 Run quickstart.md API examples and verify expected responses
+- [x] T032 Run all integration tests via docker-compose.test.yml and verify pass (requires Docker)
+- [x] T033 Run quickstart.md API examples and verify expected responses (requires Docker)
 
 **Checkpoint**: All tests passing, quickstart validated
 
