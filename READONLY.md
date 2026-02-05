@@ -70,3 +70,35 @@ Produce a clear project plan that includes:
 
 Respect the constitution constraints strictly: keep everything extremely minimal, no extra layers, no additional features, no hot-reload, no devtools, no unnecessary configuration.
 ```
+
+After this, run tasks, analyse and implement commands.
+
+```
+/speckit.specify Extend the existing REST API to add Role resources with full CRUD operations and a many-to-many relationship with User.
+
+A Role has:
+- An auto-generated unique ID
+- A name (required string, must be unique)
+
+Required endpoints for Roles (JSON API):
+- POST /roles → create a new role (request body: name)
+- GET /roles → return list of all roles
+- GET /roles/{id} → return single role by ID
+- PUT /roles/{id} → update role name by ID (request body: name)
+- DELETE /roles/{id} → delete role by ID only if it is not assigned to any user; if assigned, return 409 Conflict with error message
+
+Required endpoints for managing roles on a User (all actions initiated from the User side):
+- GET /users/{userId}/roles → return list of roles assigned to the user
+- POST /users/{userId}/roles/{roleId} → add the specified role to the user (return 404 if user or role not found, 409 if already assigned)
+- DELETE /users/{userId}/roles/{roleId} → remove the specified role from the user (return 404 if user or role not found or if not assigned)
+
+Return appropriate HTTP status codes and JSON responses (role/user data on success, error details on failure).
+
+Include basic integration tests that verify:
+- All Role CRUD operations, including successful delete and failed delete when role is assigned
+- Assigning/removing roles to/from a user via the sub-resource endpoints
+- That role uniqueness is enforced
+- End-to-end behavior with valid and invalid inputs
+
+No authentication, no pagination, no filtering, no bulk operations, no additional features.
+``` 
