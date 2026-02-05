@@ -21,3 +21,25 @@
 
 All responses must respect these rules without exception. No explanations, no justifications, no deviations.
 ```
+
+```
+/speckit.specify Create a minimal backend application with a REST API for basic CRUD operations on User resources.
+
+A User has:
+- An auto-generated unique ID
+- A name (required string)
+- An email (required string)
+
+Required endpoints (JSON API):
+- POST /users → create a new user (request body: name and email)
+- GET /users → return list of all users
+- GET /users/{id} → return single user by ID
+- PUT /users/{id} → update user by ID (request body: name and/or email)
+- DELETE /users/{id} → delete user by ID
+
+Return appropriate HTTP status codes and JSON responses (user data on success, error details on failure).
+
+Include basic integration tests that start the full application with a real database and verify each endpoint works end-to-end with valid and invalid inputs.
+
+No authentication, no pagination, no filtering, no additional features.
+```
