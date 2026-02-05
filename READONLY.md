@@ -43,3 +43,30 @@ Include basic integration tests that start the full application with a real data
 
 No authentication, no pagination, no filtering, no additional features.
 ```
+
+```
+/speckit.plan
+Plan the implementation using the following technical choices:
+
+- Build tool: Maven (standard pom.xml with spring-boot-starter-parent)
+- Framework: Spring Boot version 3.5.10
+- Persistence: Spring Data JPA with Hibernate
+- Database: PostgreSQL only, always running in a Docker container (no H2, no embedded database, no local database allowed)
+- Testing: @SpringBootTest with Testcontainers for integration tests only
+- Runtime: ABSOLUTE AND NON-NEGOTIABLE REQUIREMENT — All code execution (development, testing, production, any environment) MUST run exclusively inside Docker containers. Never run the application, tests, or database directly on the local host machine. No local execution instructions allowed.
+
+Mandatory deliverables:
+- Dockerfile (multi-stage: build with Maven, run the JAR)
+- docker-compose.yml to orchestrate the application container and a PostgreSQL container for development and manual testing
+
+Produce a clear project plan that includes:
+
+- Complete list of files and packages to create (including Dockerfile and docker-compose.yml)
+- Brief description of each component's responsibility
+- Full PlantUML source code for the following diagrams:
+  - Data model (class diagram showing the User entity and its fields)
+  - Use case diagram (actor interacting with the five CRUD use cases)
+  - Sequence diagrams, one for each CRUD operation (POST create, GET list, GET by id, PUT update, DELETE)
+
+Respect the constitution constraints strictly: keep everything extremely minimal, no extra layers, no additional features, no hot-reload, no devtools, no unnecessary configuration.
+```
