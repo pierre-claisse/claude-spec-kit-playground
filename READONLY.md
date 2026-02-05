@@ -138,3 +138,23 @@ Respect the constitution constraints strictly: keep everything extremely minimal
 ```
 
 After this, run tasks, analyse and implement commands.
+
+```
+/speckit.specify Create a single-page application frontend that interacts exclusively with the existing backend REST API to perform CRUD operations on User resources only.
+
+The application must be contained in a single HTML page with inline JavaScript and CSS.
+
+Required UI features:
+- A table listing all users, with columns: ID, Name, Email, and action buttons (Edit, Delete) for each row
+- A "Create New User" button that opens a form (modal or inline section) with fields: Name (required), Email (required)
+- Edit button on each row opens the same form pre-filled with the user's data for update
+- Delete button on each row shows a confirmation dialog before deleting
+- After successful create, update, or delete, refresh the user list automatically and show a brief success message
+- On API errors, display the error message returned by the backend
+
+All interactions must be asynchronous (fetch API calls to the exact backend endpoints: POST /users, GET /users, GET /users/{id}, PUT /users/{id}, DELETE /users/{id}) and update the DOM dynamically without page reloads.
+
+No routing, no multiple pages, no tabs, no additional features (no sorting, searching, pagination, validation beyond required fields, or any Role-related functionality).
+
+Include basic end-to-end tests that start both the backend and frontend and verify the full CRUD flow with valid and invalid inputs.
+```
