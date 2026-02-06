@@ -206,3 +206,29 @@ Respect the constitution constraints strictly: keep everything extremely minimal
 ```
 
 After this, run tasks, analyse and implement commands.
+
+```
+/speckit.specify Extend the existing single-page application frontend to also support full CRUD operations on Role resources, while keeping the existing User CRUD functionality.
+
+Add a clean, intuitive navigation mechanism to switch between the User management view and the Role management view (e.g., tabs, buttons, or a simple menu that clearly shows which section is active).
+
+For Roles:
+- A table listing all roles, with columns: ID, Name, and action buttons (Edit, Delete) for each row
+- A "Create New Role" button that opens a form with field: Name (required)
+- Edit button on each row opens the same form pre-filled with the role's data for update
+- Delete button on each row shows a confirmation dialog before deleting; if deletion fails because the role is assigned to users, display the error message from the backend
+- After successful create, update, or delete, refresh the role list automatically and show a brief success message
+- On API errors, display the error message returned by the backend
+
+All Role interactions must be asynchronous (fetch API calls to the exact backend endpoints: POST /roles, GET /roles, GET /roles/{id}, PUT /roles/{id}, DELETE /roles/{id}) and update the DOM dynamically without page reloads.
+
+The navigation must allow seamless switching between the two views while preserving the single-page nature (no full page reloads, no external routing).
+
+No features for assigning or removing roles from users, no bulk operations, no sorting, searching, pagination, or any additional functionality.
+
+Include basic end-to-end tests that start both the backend and frontend and verify:
+- Navigation between User and Role views
+- Full Role CRUD flow (list, create, edit, delete) with valid inputs
+- Delete failure when role is assigned
+- Error handling and required field enforcement
+```
