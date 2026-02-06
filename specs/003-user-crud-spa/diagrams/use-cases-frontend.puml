@@ -1,0 +1,47 @@
+@startuml use-cases-frontend
+!theme plain
+left to right direction
+
+title Frontend Use Cases - User CRUD Operations
+
+actor "User" as user
+
+rectangle "User CRUD SPA" {
+    usecase "List Users" as UC1
+    usecase "Create User" as UC2
+    usecase "Update User" as UC3
+    usecase "Delete User" as UC4
+}
+
+user --> UC1 : Views user table
+user --> UC2 : Clicks "Create New User"
+user --> UC3 : Clicks "Edit" on row
+user --> UC4 : Clicks "Delete" on row
+
+note right of UC1
+    GET /users
+    Display in Material table
+    Shows ID, Name, Email columns
+end note
+
+note right of UC2
+    Opens form dialog
+    Validates required fields
+    POST /users
+    Refreshes list on success
+end note
+
+note right of UC3
+    Opens form pre-filled
+    Validates required fields
+    PUT /users/{id}
+    Refreshes list on success
+end note
+
+note right of UC4
+    Shows confirm() dialog
+    DELETE /users/{id}
+    Refreshes list on success
+end note
+
+@enduml

@@ -26,3 +26,15 @@ Thumbs.db
 # Environment
 .env
 .env.*
+
+# Node.js / Angular (frontend)
+node_modules/
+dist/
+.angular/
+.npm/
+npm-debug.log*
+yarn-error.log*
+
+# Cypress
+frontend/cypress/videos/
+frontend/cypress/screenshots/

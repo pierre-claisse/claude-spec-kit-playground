@@ -138,3 +138,71 @@ Respect the constitution constraints strictly: keep everything extremely minimal
 ```
 
 After this, run tasks, analyse and implement commands.
+
+```
+/speckit.specify Create a single-page application frontend that interacts exclusively with the existing backend REST API to perform CRUD operations on User resources only.
+
+The application must be contained in a single HTML page with inline JavaScript and CSS.
+
+Required UI features:
+- A table listing all users, with columns: ID, Name, Email, and action buttons (Edit, Delete) for each row
+- A "Create New User" button that opens a form (modal or inline section) with fields: Name (required), Email (required)
+- Edit button on each row opens the same form pre-filled with the user's data for update
+- Delete button on each row shows a confirmation dialog before deleting
+- After successful create, update, or delete, refresh the user list automatically and show a brief success message
+- On API errors, display the error message returned by the backend
+
+All interactions must be asynchronous (fetch API calls to the exact backend endpoints: POST /users, GET /users, GET /users/{id}, PUT /users/{id}, DELETE /users/{id}) and update the DOM dynamically without page reloads.
+
+No routing, no multiple pages, no tabs, no additional features (no sorting, searching, pagination, validation beyond required fields, or any Role-related functionality).
+
+Include basic end-to-end tests that start both the backend and frontend and verify the full CRUD flow with valid and invalid inputs.
+```
+
+```
+/speckit.plan
+Plan the implementation of the single-page application frontend that interacts with the existing backend REST API for User CRUD operations only.
+
+Use the following technical choices:
+
+- Framework: latest stable Angular (via Angular CLI)
+- Language: TypeScript configured for maximum strictness (strict: true, noImplicitAny: true, strictNullChecks: true, useUnknownInCatchVariables: true, no fallback to 'any')
+- UI components: Angular Material (minimal set of components needed: table, form fields, buttons, dialog for confirm/modals)
+- No routing (single root component handles everything)
+- HTTP client: Angular HttpClient with JSON
+- Build tool: Angular CLI (standard configuration, no extras)
+
+Backend remains unchanged (Spring Boot 3.5.10, Maven, PostgreSQL in container).
+
+Runtime: ABSOLUTE AND NON-NEGOTIABLE REQUIREMENT — All code execution (development, testing, building, production, any environment) for both backend and frontend MUST run exclusively inside Docker containers. Never run the application, ng serve, tests, builds, or database directly on the local host machine. No local execution instructions allowed.
+
+Mandatory deliverables:
+- Separate frontend directory with full Angular project structure
+- Dockerfile for frontend (multi-stage: build stage with node/Angular CLI, runtime stage with nginx serving dist folder)
+- Optional dev Dockerfile or compose override for ng serve in a container (hot-reload capable)
+- Updated docker-compose.yml that orchestrates:
+  - PostgreSQL container
+  - Backend application container
+  - Frontend container (nginx serving the built app for prod, or ng serve container for dev)
+
+End-to-end tests:
+- Use Cypress (minimal configuration) for basic e2e tests
+- Tests must start the full stack (backend + database + frontend) via docker-compose and verify the complete User CRUD flow (list, create, edit, delete) including success cases, validation (required fields), and error handling
+
+Produce a clear project plan that includes:
+
+- Complete updated project structure (highlight frontend files and any modifications)
+- Brief description of each new or modified component's responsibility (focus on Angular components: e.g., AppComponent containing table + form/modal)
+- Separate .puml files containing full PlantUML source code for:
+  - data-model.puml: class diagram showing backend entities (User and Role with many-to-many)
+  - use-cases-frontend.puml: use case diagram with an actor (User) interacting with frontend use cases (List Users, Create User, Update User, Delete User)
+  - sequence-list-users.puml
+  - sequence-create-user.puml
+  - sequence-update-user.puml
+  - sequence-delete-user.puml
+  - (Each sequence diagram must show the browser/frontend calling the backend REST endpoint and updating the UI)
+
+Respect the constitution constraints strictly: keep everything extremely minimal, no extra components/modules/services, no guards, no interceptors, no advanced Material features, no unnecessary configuration.
+```
+
+After this, run tasks, analyse and implement commands.

@@ -1,0 +1,70 @@
+@startuml data-model
+!theme plain
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+
+title Backend Data Model - User and Role Entities
+
+package "Backend (Spring Boot)" {
+    class User {
+        +Long id
+        +String name
+        +String email
+        -Set<Role> roles
+        --
+        +getId(): Long
+        +getName(): String
+        +getEmail(): String
+        +getRoles(): Set<Role>
+        +setName(String): void
+        +setEmail(String): void
+        +setRoles(Set<Role>): void
+    }
+
+    class Role {
+        +Long id
+        +String name
+        -Set<User> users
+        --
+        +getId(): Long
+        +getName(): String
+        +getUsers(): Set<User>
+        +setName(String): void
+        +setUsers(Set<User>): void
+    }
+
+    User "0..*" -- "0..*" Role : user_roles >
+}
+
+package "Frontend (Angular)" {
+    interface UserModel <<interface>> {
+        +id: number
+        +name: string
+        +email: string
+    }
+}
+
+note right of User
+    @Entity
+    @Table(name = "users")
+
+    Owns the many-to-many
+    relationship via @JoinTable
+end note
+
+note right of Role
+    @Entity
+    @Table(name = "roles")
+    @Column(unique = true) on name
+
+    Inverse side via
+    @ManyToMany(mappedBy = "roles")
+end note
+
+note bottom of UserModel
+    Frontend TypeScript interface
+    Only interacts with User data
+    (roles are @JsonIgnore'd)
+end note
+
+@enduml

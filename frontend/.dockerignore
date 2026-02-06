@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.angular/
+.git/
+*.log
+*.md
+cypress/videos/
+cypress/screenshots/
+Dockerfile*
+.dockerignore
+.gitignore

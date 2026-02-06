@@ -1,0 +1,56 @@
+@startuml sequence-list-users
+!theme plain
+
+title Sequence: List Users (US1 - P1)
+
+actor User as user
+participant "Browser" as browser
+participant "AppComponent" as app
+participant "HttpClient" as http
+participant "nginx" as nginx
+participant "Backend API" as api
+database "PostgreSQL" as db
+
+user -> browser: Open application
+activate browser
+
+browser -> app: ngOnInit()
+activate app
+
+app -> http: GET /users
+activate http
+
+http -> nginx: GET /users
+activate nginx
+
+nginx -> api: GET /users (proxy)
+activate api
+
+api -> db: SELECT * FROM users
+activate db
+db --> api: User[]
+deactivate db
+
+api --> nginx: 200 OK [User[]]
+deactivate api
+
+nginx --> http: 200 OK [User[]]
+deactivate nginx
+
+http --> app: Observable<User[]>
+deactivate http
+
+app -> app: users = response
+app -> browser: Update Material Table
+deactivate app
+
+browser --> user: Display user table
+deactivate browser
+
+note over app
+    On success: Display users in table
+    On error: Show error message
+    On empty: Show "No users found"
+end note
+
+@enduml
