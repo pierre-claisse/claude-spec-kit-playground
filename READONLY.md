@@ -204,3 +204,5 @@ Produce a clear project plan that includes:
 
 Respect the constitution constraints strictly: keep everything extremely minimal, no extra components/modules/services, no guards, no interceptors, no advanced Material features, no unnecessary configuration.
 ```
+
+After this, run tasks, analyse and implement commands.
