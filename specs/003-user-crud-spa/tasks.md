@@ -25,10 +25,10 @@
 
 **Purpose**: Create Angular project with required dependencies and TypeScript configuration
 
-- [ ] T001 Create frontend directory and initialize Angular 19.x project with Angular CLI in frontend/
-- [ ] T002 Configure TypeScript strict mode in frontend/tsconfig.json (strict: true, noImplicitAny: true, strictNullChecks: true, useUnknownInCatchVariables: true)
-- [ ] T003 [P] Install Angular Material and configure minimal modules (MatTableModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatDialogModule, MatSnackBarModule) in frontend/src/app/app.config.ts
-- [ ] T004 [P] Create User interface in frontend/src/app/user.model.ts with id, name, email fields
+- [x] T001 Create frontend directory and initialize Angular 19.x project with Angular CLI in frontend/
+- [x] T002 Configure TypeScript strict mode in frontend/tsconfig.json (strict: true, noImplicitAny: true, strictNullChecks: true, useUnknownInCatchVariables: true)
+- [x] T003 [P] Install Angular Material and configure minimal modules (MatTableModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatDialogModule, MatSnackBarModule) in frontend/src/app/app.config.ts
+- [x] T004 [P] Create User interface in frontend/src/app/user.model.ts with id, name, email fields
 
 ---
 
@@ -38,13 +38,13 @@
 
 **CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T005 Create production Dockerfile (multi-stage: Node 20 + Angular CLI build, nginx:alpine runtime) in frontend/Dockerfile
-- [ ] T006 [P] Create development Dockerfile (Node 20 with ng serve) in frontend/Dockerfile.dev
-- [ ] T007 [P] Create nginx configuration with API proxy (/users -> app:8080) in frontend/nginx.conf
-- [ ] T008 Update docker-compose.yml to add frontend service (build from frontend/, ports 80:80, depends on app)
-- [ ] T009 [P] Create docker-compose.dev.yml with frontend hot reload (volume mount frontend/src, port 4200)
-- [ ] T010 [P] Create docker-compose.e2e.yml for Cypress tests (frontend + cypress/included container)
-- [ ] T011 Initialize Cypress in frontend/cypress/ with cypress.config.ts and support files
+- [x] T005 Create production Dockerfile (multi-stage: Node 20 + Angular CLI build, nginx:alpine runtime) in frontend/Dockerfile
+- [x] T006 [P] Create development Dockerfile (Node 20 with ng serve) in frontend/Dockerfile.dev
+- [x] T007 [P] Create nginx configuration with API proxy (/users -> app:8080) in frontend/nginx.conf
+- [x] T008 Update docker-compose.yml to add frontend service (build from frontend/, ports 80:80, depends on app)
+- [x] T009 [P] Create docker-compose.dev.yml with frontend hot reload (volume mount frontend/src, port 4200)
+- [x] T010 [P] Create docker-compose.e2e.yml for Cypress tests (frontend + cypress/included container)
+- [x] T011 Initialize Cypress in frontend/cypress/ with cypress.config.ts and support files
 
 **Checkpoint**: Docker infrastructure ready - user story implementation can now begin
 
@@ -58,12 +58,12 @@
 
 ### Implementation for User Story 1
 
-- [ ] T012 [US1] Create base AppComponent structure in frontend/src/app/app.component.ts with HttpClient injection and users array
-- [ ] T013 [US1] Implement loadUsers() method calling GET /users in frontend/src/app/app.component.ts
-- [ ] T014 [US1] Create Material table template in frontend/src/app/app.component.html with columns: ID, Name, Email, Actions
-- [ ] T015 [P] [US1] Add basic styling for table in frontend/src/app/app.component.css
-- [ ] T016 [US1] Implement error handling for loadUsers() - display error message on failure in frontend/src/app/app.component.ts
-- [ ] T017 [US1] Call loadUsers() in ngOnInit() to load users on page load in frontend/src/app/app.component.ts
+- [x] T012 [US1] Create base AppComponent structure in frontend/src/app/app.component.ts with HttpClient injection and users array
+- [x] T013 [US1] Implement loadUsers() method calling GET /users in frontend/src/app/app.component.ts
+- [x] T014 [US1] Create Material table template in frontend/src/app/app.component.html with columns: ID, Name, Email, Actions
+- [x] T015 [P] [US1] Add basic styling for table in frontend/src/app/app.component.css
+- [x] T016 [US1] Implement error handling for loadUsers() - display error message on failure in frontend/src/app/app.component.ts
+- [x] T017 [US1] Call loadUsers() in ngOnInit() to load users on page load in frontend/src/app/app.component.ts
 
 **Checkpoint**: User Story 1 complete - table displays users from backend. Test with: `docker-compose up -d`, open http://localhost:80
 
@@ -77,13 +77,13 @@
 
 ### Implementation for User Story 2
 
-- [ ] T018 [US2] Add "Create New User" button to template in frontend/src/app/app.component.html
-- [ ] T019 [US2] Create form dialog template with name/email fields using ng-template in frontend/src/app/app.component.html
-- [ ] T020 [US2] Implement openCreateDialog() method using MatDialog in frontend/src/app/app.component.ts
-- [ ] T021 [US2] Implement form validation (required fields, error messages) in frontend/src/app/app.component.ts
-- [ ] T022 [US2] Implement createUser() method calling POST /users in frontend/src/app/app.component.ts
-- [ ] T023 [US2] Add success snackbar message after create using MatSnackBar in frontend/src/app/app.component.ts
-- [ ] T024 [US2] Handle backend validation errors (400 Bad Request) and display to user in frontend/src/app/app.component.ts
+- [x] T018 [US2] Add "Create New User" button to template in frontend/src/app/app.component.html
+- [x] T019 [US2] Create form dialog template with name/email fields using ng-template in frontend/src/app/app.component.html
+- [x] T020 [US2] Implement openCreateDialog() method using MatDialog in frontend/src/app/app.component.ts
+- [x] T021 [US2] Implement form validation (required fields, error messages) in frontend/src/app/app.component.ts
+- [x] T022 [US2] Implement createUser() method calling POST /users in frontend/src/app/app.component.ts
+- [x] T023 [US2] Add success snackbar message after create using MatSnackBar in frontend/src/app/app.component.ts
+- [x] T024 [US2] Handle backend validation errors (400 Bad Request) and display to user in frontend/src/app/app.component.ts
 
 **Checkpoint**: User Story 2 complete - can create new users via dialog
 
@@ -97,11 +97,11 @@
 
 ### Implementation for User Story 3
 
-- [ ] T025 [US3] Add "Edit" button to each row Actions column in frontend/src/app/app.component.html
-- [ ] T026 [US3] Implement openEditDialog(user) method to open dialog with pre-filled data in frontend/src/app/app.component.ts
-- [ ] T027 [US3] Implement updateUser() method calling PUT /users/{id} in frontend/src/app/app.component.ts
-- [ ] T028 [US3] Add success snackbar message after update in frontend/src/app/app.component.ts
-- [ ] T029 [US3] Handle 404 Not Found (user deleted by another) and display error in frontend/src/app/app.component.ts
+- [x] T025 [US3] Add "Edit" button to each row Actions column in frontend/src/app/app.component.html
+- [x] T026 [US3] Implement openEditDialog(user) method to open dialog with pre-filled data in frontend/src/app/app.component.ts
+- [x] T027 [US3] Implement updateUser() method calling PUT /users/{id} in frontend/src/app/app.component.ts
+- [x] T028 [US3] Add success snackbar message after update in frontend/src/app/app.component.ts
+- [x] T029 [US3] Handle 404 Not Found (user deleted by another) and display error in frontend/src/app/app.component.ts
 
 **Checkpoint**: User Story 3 complete - can edit existing users via dialog
 
@@ -115,11 +115,11 @@
 
 ### Implementation for User Story 4
 
-- [ ] T030 [US4] Add "Delete" button to each row Actions column in frontend/src/app/app.component.html
-- [ ] T031 [US4] Implement deleteUser(userId) method with native confirm() dialog in frontend/src/app/app.component.ts
-- [ ] T032 [US4] Implement DELETE /users/{id} API call in frontend/src/app/app.component.ts
-- [ ] T033 [US4] Add success snackbar message after delete in frontend/src/app/app.component.ts
-- [ ] T034 [US4] Handle 404 Not Found (already deleted) and display error in frontend/src/app/app.component.ts
+- [x] T030 [US4] Add "Delete" button to each row Actions column in frontend/src/app/app.component.html
+- [x] T031 [US4] Implement deleteUser(userId) method with native confirm() dialog in frontend/src/app/app.component.ts
+- [x] T032 [US4] Implement DELETE /users/{id} API call in frontend/src/app/app.component.ts
+- [x] T033 [US4] Add success snackbar message after delete in frontend/src/app/app.component.ts
+- [x] T034 [US4] Handle 404 Not Found (already deleted) and display error in frontend/src/app/app.component.ts
 
 **Checkpoint**: User Story 4 complete - can delete users with confirmation
 
@@ -131,17 +131,17 @@
 
 ### E2E Tests (Required per spec)
 
-- [ ] T035 [P] Write E2E test for US1: List users displays table with data in frontend/cypress/e2e/user-crud.cy.ts
-- [ ] T036 [P] Write E2E test for US2: Create user via dialog in frontend/cypress/e2e/user-crud.cy.ts
-- [ ] T037 [P] Write E2E test for US3: Edit user via dialog in frontend/cypress/e2e/user-crud.cy.ts
-- [ ] T038 [P] Write E2E test for US4: Delete user with confirmation in frontend/cypress/e2e/user-crud.cy.ts
-- [ ] T039 [P] Write E2E test for validation errors (empty fields) in frontend/cypress/e2e/user-crud.cy.ts
-- [ ] T040 Run full E2E test suite via docker-compose.e2e.yml
+- [x] T035 [P] Write E2E test for US1: List users displays table with data in frontend/cypress/e2e/user-crud.cy.ts
+- [x] T036 [P] Write E2E test for US2: Create user via dialog in frontend/cypress/e2e/user-crud.cy.ts
+- [x] T037 [P] Write E2E test for US3: Edit user via dialog in frontend/cypress/e2e/user-crud.cy.ts
+- [x] T038 [P] Write E2E test for US4: Delete user with confirmation in frontend/cypress/e2e/user-crud.cy.ts
+- [x] T039 [P] Write E2E test for validation errors (empty fields) in frontend/cypress/e2e/user-crud.cy.ts
+- [x] T040 Run full E2E test suite via docker-compose.e2e.yml
 
 ### Final Validation
 
-- [ ] T041 Validate quickstart.md commands work (production, dev, e2e modes)
-- [ ] T042 Verify all success criteria (SC-001 through SC-007) are met
+- [x] T041 Validate quickstart.md commands work (production, dev, e2e modes)
+- [x] T042 Verify all success criteria (SC-001 through SC-007) are met
 
 ---
 
