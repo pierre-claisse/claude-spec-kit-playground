@@ -1,49 +1,95 @@
 <div class="container">
-  <h1>User CRUD SPA</h1>
+  <h1>CRUD SPA</h1>
+
+  <div class="navigation">
+    <mat-button-toggle-group [value]="activeView" (change)="switchView($event.value)">
+      <mat-button-toggle value="users">Users</mat-button-toggle>
+      <mat-button-toggle value="roles">Roles</mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
 
   @if (errorMessage) {
     <div class="error-message">{{ errorMessage }}</div>
   }
 
-  <div class="action-buttons">
-    <button mat-raised-button color="primary" (click)="openCreateDialog()">
-      Create New User
-    </button>
-  </div>
+  @if (activeView === 'users') {
+    <div class="action-buttons">
+      <button mat-raised-button color="primary" (click)="openCreateDialog()">
+        Create New User
+      </button>
+    </div>
 
-  <table mat-table [dataSource]="users" class="user-table">
-    <ng-container matColumnDef="id">
-      <th mat-header-cell *matHeaderCellDef>ID</th>
-      <td mat-cell *matCellDef="let user">{{ user.id }}</td>
-    </ng-container>
+    <table mat-table [dataSource]="users" class="user-table">
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef>ID</th>
+        <td mat-cell *matCellDef="let user">{{ user.id }}</td>
+      </ng-container>
 
-    <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef>Name</th>
-      <td mat-cell *matCellDef="let user">{{ user.name }}</td>
-    </ng-container>
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <td mat-cell *matCellDef="let user">{{ user.name }}</td>
+      </ng-container>
 
-    <ng-container matColumnDef="email">
-      <th mat-header-cell *matHeaderCellDef>Email</th>
-      <td mat-cell *matCellDef="let user">{{ user.email }}</td>
-    </ng-container>
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef>Email</th>
+        <td mat-cell *matCellDef="let user">{{ user.email }}</td>
+      </ng-container>
 
-    <ng-container matColumnDef="actions">
-      <th mat-header-cell *matHeaderCellDef>Actions</th>
-      <td mat-cell *matCellDef="let user">
-        <button mat-button color="primary" (click)="openEditDialog(user)">Edit</button>
-        <button mat-button color="warn" (click)="deleteUser(user.id)">Delete</button>
-      </td>
-    </ng-container>
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let user">
+          <button mat-button color="primary" (click)="openEditDialog(user)">Edit</button>
+          <button mat-button color="warn" (click)="deleteUser(user.id)">Delete</button>
+        </td>
+      </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
-    <tr class="mat-row" *matNoDataRow>
-      <td class="mat-cell no-data" [attr.colspan]="displayedColumns.length">
-        No users found
-      </td>
-    </tr>
-  </table>
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell no-data" [attr.colspan]="displayedColumns.length">
+          No users found
+        </td>
+      </tr>
+    </table>
+  }
+
+  @if (activeView === 'roles') {
+    <div class="action-buttons">
+      <button mat-raised-button color="primary" (click)="openRoleCreateDialog()">
+        Create New Role
+      </button>
+    </div>
+
+    <table mat-table [dataSource]="roles" class="role-table">
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef>ID</th>
+        <td mat-cell *matCellDef="let role">{{ role.id }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <td mat-cell *matCellDef="let role">{{ role.name }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let role">
+          <button mat-button color="primary" (click)="openRoleEditDialog(role)">Edit</button>
+          <button mat-button color="warn" (click)="deleteRole(role.id)">Delete</button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="roleDisplayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: roleDisplayedColumns;"></tr>
+
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell no-data" [attr.colspan]="roleDisplayedColumns.length">
+          No roles found
+        </td>
+      </tr>
+    </table>
+  }
 </div>
 
 <ng-template #userFormDialog>
@@ -67,6 +113,25 @@
     <button mat-button (click)="onCancel()" [disabled]="isSubmitting">Cancel</button>
     <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="isSubmitting">
       {{ isSubmitting ? 'Submitting...' : 'Submit' }}
+    </button>
+  </mat-dialog-actions>
+</ng-template>
+
+<ng-template #roleFormDialog>
+  <h2 mat-dialog-title>{{ editingRoleId !== null ? 'Edit Role' : 'Create New Role' }}</h2>
+  <mat-dialog-content>
+    <form (ngSubmit)="onRoleSubmit()">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Name</mat-label>
+        <input matInput [(ngModel)]="roleFormName" name="roleName" placeholder="Enter role name">
+      </mat-form-field>
+      <div class="field-error" *ngIf="roleFormNameError">{{ roleFormNameError }}</div>
+    </form>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="onRoleCancel()" [disabled]="isRoleSubmitting">Cancel</button>
+    <button mat-raised-button color="primary" (click)="onRoleSubmit()" [disabled]="isRoleSubmitting">
+      {{ isRoleSubmitting ? 'Submitting...' : 'Submit' }}
     </button>
   </mat-dialog-actions>
 </ng-template>
