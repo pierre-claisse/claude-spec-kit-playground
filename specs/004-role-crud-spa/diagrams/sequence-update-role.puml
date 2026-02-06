@@ -1,0 +1,81 @@
+@startuml sequence-update-role
+!theme plain
+
+title Sequence: Update Role (US4 - P4)
+
+actor User as user
+participant "Browser" as browser
+participant "AppComponent" as app
+participant "MatDialog" as dialog
+participant "HttpClient" as http
+participant "nginx" as nginx
+participant "Backend API" as api
+database "PostgreSQL" as db
+
+user -> browser: Click "Edit" on role row
+activate browser
+
+browser -> app: openRoleEditDialog(role)
+activate app
+
+app -> dialog: open(roleFormTemplate, {data: role})
+activate dialog
+
+dialog --> user: Show form (pre-filled with role.name)
+deactivate dialog
+
+user -> dialog: Modify name
+user -> dialog: Click Submit
+
+dialog -> app: onRoleSubmit(formData, roleId)
+
+alt Validation fails (empty name)
+    app -> app: Show validation error
+    app --> user: "Name is required"
+else Validation passes
+    app -> http: PUT /roles/{id} {name}
+    activate http
+
+    http -> nginx: PUT /roles/{id}
+    activate nginx
+
+    nginx -> api: PUT /roles/{id} (proxy)
+    activate api
+
+    api -> db: SELECT * FROM roles WHERE id = ?
+    activate db
+    db --> api: Role (or null)
+    deactivate db
+
+    alt Role not found
+        api --> nginx: 404 Not Found
+        nginx --> http: 404 Not Found
+        http --> app: Error
+        app --> user: Show "Role not found" error
+    else Role found
+        api -> api: Update name field
+        api -> db: UPDATE roles SET name = ?
+        activate db
+        db --> api: Updated Role
+        deactivate db
+
+        api --> nginx: 200 OK {Role}
+        deactivate api
+
+        nginx --> http: 200 OK {Role}
+        deactivate nginx
+
+        http --> app: Role
+        deactivate http
+
+        app -> dialog: close()
+        app -> app: showSuccess("Role updated")
+        app -> app: loadRoles() [refresh table]
+        app --> user: Updated table + success message
+    end
+end
+
+deactivate app
+deactivate browser
+
+@enduml

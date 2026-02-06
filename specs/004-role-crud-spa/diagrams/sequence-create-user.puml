@@ -1,0 +1,77 @@
+@startuml sequence-create-user
+!theme plain
+
+title Sequence: Create User (US2 - P2)
+
+actor User as user
+participant "Browser" as browser
+participant "AppComponent" as app
+participant "MatDialog" as dialog
+participant "HttpClient" as http
+participant "nginx" as nginx
+participant "Backend API" as api
+database "PostgreSQL" as db
+
+user -> browser: Click "Create New User"
+activate browser
+
+browser -> app: openCreateDialog()
+activate app
+
+app -> dialog: open(formTemplate)
+activate dialog
+
+dialog --> user: Show form (empty)
+deactivate dialog
+
+user -> dialog: Fill name, email
+user -> dialog: Click Submit
+
+dialog -> app: onSubmit(formData)
+
+alt Validation fails (empty fields)
+    app -> app: Show validation error
+    app --> user: "Name/Email is required"
+else Validation passes
+    app -> http: POST /users {name, email}
+    activate http
+
+    http -> nginx: POST /users
+    activate nginx
+
+    nginx -> api: POST /users (proxy)
+    activate api
+
+    api -> api: Validate @NotBlank
+
+    alt Backend validation fails
+        api --> nginx: 400 Bad Request
+        nginx --> http: 400 Bad Request
+        http --> app: Error
+        app --> user: Show backend error
+    else Backend validation passes
+        api -> db: INSERT INTO users
+        activate db
+        db --> api: User (with id)
+        deactivate db
+
+        api --> nginx: 201 Created {User}
+        deactivate api
+
+        nginx --> http: 201 Created {User}
+        deactivate nginx
+
+        http --> app: User
+        deactivate http
+
+        app -> dialog: close()
+        app -> app: showSuccess("User created")
+        app -> app: loadUsers() [refresh table]
+        app --> user: Updated table + success message
+    end
+end
+
+deactivate app
+deactivate browser
+
+@enduml

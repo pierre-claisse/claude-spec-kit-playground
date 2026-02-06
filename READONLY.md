@@ -232,3 +232,56 @@ Include basic end-to-end tests that start both the backend and frontend and veri
 - Delete failure when role is assigned
 - Error handling and required field enforcement
 ```
+
+```
+/speckit.plan Plan the extension of the existing Angular frontend to include full CRUD operations on Role resources and intuitive navigation between User and Role management views.
+
+Use the exact same technical choices as before:
+- Framework: latest stable Angular (via Angular CLI)
+- Language: TypeScript configured for maximum strictness (strict: true, noImplicitAny: true, strictNullChecks: true, useUnknownInCatchVariables: true, no fallback to 'any')
+- UI components: Angular Material (minimal set: table, form fields, buttons, dialog, tabs or button group for navigation)
+- No routing module (use simple component visibility toggling or Material tabs for view switching)
+- HTTP client: Angular HttpClient with JSON
+- Build tool: Angular CLI (standard configuration, no extras)
+
+Backend remains unchanged.
+
+Runtime: ABSOLUTE AND NON-NEGOTIABLE REQUIREMENT — All code execution (development, testing, building, production, any environment) for both backend and frontend MUST run exclusively inside Docker containers. Never run the application, ng serve, tests, builds, or database directly on the local host machine. No local execution instructions allowed.
+
+Mandatory deliverables:
+- Updated frontend Angular project (no structural changes beyond new components/templates)
+- Dockerfile for frontend unchanged or minimally updated if needed
+- Updated docker-compose.yml that continues to orchestrate:
+  - PostgreSQL container
+  - Backend application container
+  - Frontend container (nginx for prod, optional ng serve container for dev)
+
+End-to-end tests:
+- Extend existing Cypress tests to also cover:
+  - Navigation between User and Role views
+  - Full Role CRUD flow (list, create, edit, delete) with valid inputs
+  - Delete failure when role is assigned (error message display)
+  - Required field enforcement and API error handling
+
+Produce a clear project plan that includes:
+
+- Complete updated project structure (highlight new or modified frontend files)
+- Brief description of each new or modified component's responsibility (e.g., new RoleListComponent, RoleFormComponent, navigation handling in AppComponent)
+- Separate .puml files containing full PlantUML source code for the updated diagrams:
+  - data-model.puml: class diagram showing backend entities (User and Role with many-to-many, unchanged)
+  - use-cases-frontend.puml: updated use case diagram with an actor interacting with all frontend use cases (List/Create/Update/Delete Users + List/Create/Update/Delete Roles + Switch View)
+  - sequence-list-users.puml (unchanged)
+  - sequence-create-user.puml (unchanged)
+  - sequence-update-user.puml (unchanged)
+  - sequence-delete-user.puml (unchanged)
+  - sequence-list-roles.puml
+  - sequence-create-role.puml
+  - sequence-update-role.puml
+  - sequence-delete-role.puml
+  - sequence-switch-view.puml (simple sequence showing user action toggling between User and Role views)
+  - (Each sequence diagram must show the browser/frontend calling the backend REST endpoint and updating the UI)
+
+Respect the constitution constraints strictly: keep everything extremely minimal, no extra components/modules/services, no advanced features, no unnecessary configuration.
+```
+
+After this, run tasks, analyse and implement commands.

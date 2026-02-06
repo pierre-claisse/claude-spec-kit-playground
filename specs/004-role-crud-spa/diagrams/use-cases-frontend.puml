@@ -1,0 +1,66 @@
+@startuml use-cases-frontend
+!theme plain
+left to right direction
+
+title Frontend Use Cases - User & Role CRUD Operations
+
+actor "User" as user
+
+rectangle "User & Role CRUD SPA" {
+    package "Navigation" {
+        usecase "Switch View" as UC_NAV
+    }
+
+    package "User Management" {
+        usecase "List Users" as UC1
+        usecase "Create User" as UC2
+        usecase "Update User" as UC3
+        usecase "Delete User" as UC4
+    }
+
+    package "Role Management" {
+        usecase "List Roles" as UC5
+        usecase "Create Role" as UC6
+        usecase "Update Role" as UC7
+        usecase "Delete Role" as UC8
+    }
+}
+
+user --> UC_NAV : Toggle Users/Roles
+
+user --> UC1 : Views user table
+user --> UC2 : Clicks "Create New User"
+user --> UC3 : Clicks "Edit" on user row
+user --> UC4 : Clicks "Delete" on user row
+
+user --> UC5 : Views role table
+user --> UC6 : Clicks "Create New Role"
+user --> UC7 : Clicks "Edit" on role row
+user --> UC8 : Clicks "Delete" on role row
+
+note right of UC_NAV
+    Button toggle group
+    "Users" | "Roles"
+    Default: Users
+end note
+
+note right of UC1
+    GET /users
+    Display in Material table
+    Shows ID, Name, Email columns
+end note
+
+note right of UC5
+    GET /roles
+    Display in Material table
+    Shows ID, Name columns
+end note
+
+note right of UC8
+    DELETE /roles/{id}
+    Shows confirm() dialog
+    Fails if role assigned to users
+    Displays backend error message
+end note
+
+@enduml
