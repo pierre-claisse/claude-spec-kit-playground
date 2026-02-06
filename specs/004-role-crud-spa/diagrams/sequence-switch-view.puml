@@ -1,0 +1,81 @@
+@startuml sequence-switch-view
+!theme plain
+
+title Sequence: Switch View (US1 - P1)
+
+actor User as user
+participant "Browser" as browser
+participant "AppComponent" as app
+participant "HttpClient" as http
+participant "nginx" as nginx
+participant "Backend API" as api
+
+== Initial Load (Users View) ==
+
+user -> browser: Open application
+activate browser
+
+browser -> app: ngOnInit()
+activate app
+
+app -> app: activeView = 'users'
+app -> http: GET /users
+activate http
+http -> nginx: GET /users
+nginx -> api: GET /users (proxy)
+api --> nginx: 200 OK [User[]]
+nginx --> http: 200 OK [User[]]
+http --> app: User[]
+deactivate http
+
+app -> browser: Render Users table
+app --> user: Display Users view (active)
+deactivate app
+
+== Switch to Roles View ==
+
+user -> browser: Click "Roles" toggle
+activate app
+
+browser -> app: switchView('roles')
+
+app -> app: activeView = 'roles'
+app -> http: GET /roles
+activate http
+http -> nginx: GET /roles
+nginx -> api: GET /roles (proxy)
+api --> nginx: 200 OK [Role[]]
+nginx --> http: 200 OK [Role[]]
+http --> app: Role[]
+deactivate http
+
+app -> browser: Hide Users table, Show Roles table
+app --> user: Display Roles view (active)
+deactivate app
+
+== Switch back to Users View ==
+
+user -> browser: Click "Users" toggle
+activate app
+
+browser -> app: switchView('users')
+
+app -> app: activeView = 'users'
+app -> http: GET /users
+activate http
+http --> app: User[]
+deactivate http
+
+app -> browser: Hide Roles table, Show Users table
+app --> user: Display Users view (active)
+deactivate app
+
+deactivate browser
+
+note over app
+    No page reload occurs
+    Only component state changes
+    Data refreshes on each switch
+end note
+
+@enduml

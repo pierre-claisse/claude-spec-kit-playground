@@ -8,7 +8,9 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { User } from './user.model';
+import { Role } from './role.model';
 
 @Component({
   selector: 'app-root',
@@ -21,7 +23,8 @@ import { User } from './user.model';
     MatSnackBarModule,
     MatDialogModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    MatButtonToggleModule
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
@@ -33,12 +36,17 @@ export class AppComponent implements OnInit {
   private readonly cdr = inject(ChangeDetectorRef);
 
   @ViewChild('userFormDialog') userFormDialog!: TemplateRef<unknown>;
+  @ViewChild('roleFormDialog') roleFormDialog!: TemplateRef<unknown>;
 
+  // Navigation state
+  activeView: 'users' | 'roles' = 'users';
+
+  // User state
   users: User[] = [];
   displayedColumns: string[] = ['id', 'name', 'email', 'actions'];
   errorMessage: string | null = null;
 
-  // Form state
+  // User form state
   formName = '';
   formEmail = '';
   formNameError = '';
@@ -48,8 +56,29 @@ export class AppComponent implements OnInit {
 
   private dialogRef: MatDialogRef<unknown> | null = null;
 
+  // Role state
+  roles: Role[] = [];
+  roleDisplayedColumns: string[] = ['id', 'name', 'actions'];
+
+  // Role form state
+  roleFormName = '';
+  roleFormNameError = '';
+  editingRoleId: number | null = null;
+  isRoleSubmitting = false;
+
+  private roleDialogRef: MatDialogRef<unknown> | null = null;
+
   ngOnInit(): void {
     this.loadUsers();
+  }
+
+  switchView(view: 'users' | 'roles'): void {
+    this.activeView = view;
+    if (view === 'users') {
+      this.loadUsers();
+    } else {
+      this.loadRoles();
+    }
   }
 
   loadUsers(): void {
@@ -63,6 +92,149 @@ export class AppComponent implements OnInit {
         this.showError(this.errorMessage);
       }
     });
+  }
+
+  loadRoles(): void {
+    this.errorMessage = null;
+    this.http.get<Role[]>('/roles').subscribe({
+      next: (roles) => {
+        this.roles = roles;
+      },
+      error: (err: HttpErrorResponse) => {
+        this.errorMessage = err.message || 'Failed to load roles';
+        this.showError(this.errorMessage);
+      }
+    });
+  }
+
+  // Role CRUD methods
+  openRoleCreateDialog(): void {
+    this.resetRoleForm();
+    this.editingRoleId = null;
+    this.roleDialogRef = this.dialog.open(this.roleFormDialog, {
+      width: '400px',
+      disableClose: true
+    });
+  }
+
+  openRoleEditDialog(role: Role): void {
+    this.resetRoleForm();
+    this.editingRoleId = role.id;
+    this.roleFormName = role.name;
+    this.roleDialogRef = this.dialog.open(this.roleFormDialog, {
+      width: '400px',
+      disableClose: true
+    });
+  }
+
+  onRoleSubmit(): void {
+    if (!this.validateRoleForm()) {
+      return;
+    }
+
+    if (this.isRoleSubmitting) {
+      return;
+    }
+
+    this.isRoleSubmitting = true;
+    this.cdr.detectChanges();
+    const roleData = { name: this.roleFormName.trim() };
+
+    if (this.editingRoleId !== null) {
+      this.updateRole(this.editingRoleId, roleData);
+    } else {
+      this.createRole(roleData);
+    }
+  }
+
+  private createRole(roleData: { name: string }): void {
+    this.http.post<Role>('/roles', roleData).subscribe({
+      next: () => {
+        this.closeRoleDialog();
+        this.showSuccess('Role created');
+        this.loadRoles();
+        this.isRoleSubmitting = false;
+      },
+      error: (err: HttpErrorResponse) => {
+        this.isRoleSubmitting = false;
+        const message = err.error?.error || err.error?.message || err.message || 'Failed to create role';
+        this.showError(message);
+      }
+    });
+  }
+
+  private updateRole(id: number, roleData: { name: string }): void {
+    this.http.put<Role>(`/roles/${id}`, roleData).subscribe({
+      next: () => {
+        this.closeRoleDialog();
+        this.showSuccess('Role updated');
+        this.loadRoles();
+        this.isRoleSubmitting = false;
+      },
+      error: (err: HttpErrorResponse) => {
+        this.isRoleSubmitting = false;
+        if (err.status === 404) {
+          this.showError('Role not found');
+          this.closeRoleDialog();
+          this.loadRoles();
+        } else {
+          const message = err.error?.error || err.error?.message || err.message || 'Failed to update role';
+          this.showError(message);
+        }
+      }
+    });
+  }
+
+  deleteRole(roleId: number): void {
+    if (!confirm('Delete this role?')) {
+      return;
+    }
+
+    this.http.delete<void>(`/roles/${roleId}`).subscribe({
+      next: () => {
+        this.showSuccess('Role deleted');
+        this.loadRoles();
+      },
+      error: (err: HttpErrorResponse) => {
+        if (err.status === 404) {
+          this.showError('Role not found');
+          this.loadRoles();
+        } else {
+          const message = err.error?.error || err.error?.message || err.message || 'Failed to delete role';
+          this.showError(message);
+        }
+      }
+    });
+  }
+
+  onRoleCancel(): void {
+    this.closeRoleDialog();
+  }
+
+  private closeRoleDialog(): void {
+    if (this.roleDialogRef) {
+      this.roleDialogRef.close();
+      this.roleDialogRef = null;
+    }
+    this.resetRoleForm();
+  }
+
+  private resetRoleForm(): void {
+    this.roleFormName = '';
+    this.roleFormNameError = '';
+    this.isRoleSubmitting = false;
+  }
+
+  private validateRoleForm(): boolean {
+    this.roleFormNameError = '';
+
+    if (!this.roleFormName.trim()) {
+      this.roleFormNameError = 'Name is required';
+      this.cdr.detectChanges();
+      return false;
+    }
+
+    return true;
   }
 
   openCreateDialog(): void {

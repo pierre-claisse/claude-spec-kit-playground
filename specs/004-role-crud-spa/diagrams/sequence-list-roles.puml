@@ -1,0 +1,57 @@
+@startuml sequence-list-roles
+!theme plain
+
+title Sequence: List Roles (US2 - P2)
+
+actor User as user
+participant "Browser" as browser
+participant "AppComponent" as app
+participant "HttpClient" as http
+participant "nginx" as nginx
+participant "Backend API" as api
+database "PostgreSQL" as db
+
+user -> browser: Switch to Roles view
+activate browser
+
+browser -> app: switchView('roles')
+activate app
+
+app -> app: activeView = 'roles'
+app -> http: GET /roles
+activate http
+
+http -> nginx: GET /roles
+activate nginx
+
+nginx -> api: GET /roles (proxy)
+activate api
+
+api -> db: SELECT * FROM roles
+activate db
+db --> api: Role[]
+deactivate db
+
+api --> nginx: 200 OK [Role[]]
+deactivate api
+
+nginx --> http: 200 OK [Role[]]
+deactivate nginx
+
+http --> app: Observable<Role[]>
+deactivate http
+
+app -> app: roles = response
+app -> browser: Update Material Table
+deactivate app
+
+browser --> user: Display role table
+deactivate browser
+
+note over app
+    On success: Display roles in table
+    On error: Show error message
+    On empty: Show "No roles found"
+end note
+
+@enduml

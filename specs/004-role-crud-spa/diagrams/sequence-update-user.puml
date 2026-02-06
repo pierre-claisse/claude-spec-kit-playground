@@ -1,0 +1,81 @@
+@startuml sequence-update-user
+!theme plain
+
+title Sequence: Update User (US3 - P3)
+
+actor User as user
+participant "Browser" as browser
+participant "AppComponent" as app
+participant "MatDialog" as dialog
+participant "HttpClient" as http
+participant "nginx" as nginx
+participant "Backend API" as api
+database "PostgreSQL" as db
+
+user -> browser: Click "Edit" on user row
+activate browser
+
+browser -> app: openEditDialog(user)
+activate app
+
+app -> dialog: open(formTemplate, {data: user})
+activate dialog
+
+dialog --> user: Show form (pre-filled)
+deactivate dialog
+
+user -> dialog: Modify name and/or email
+user -> dialog: Click Submit
+
+dialog -> app: onSubmit(formData, userId)
+
+alt Validation fails (empty fields)
+    app -> app: Show validation error
+    app --> user: "Name/Email is required"
+else Validation passes
+    app -> http: PUT /users/{id} {name, email}
+    activate http
+
+    http -> nginx: PUT /users/{id}
+    activate nginx
+
+    nginx -> api: PUT /users/{id} (proxy)
+    activate api
+
+    api -> db: SELECT * FROM users WHERE id = ?
+    activate db
+    db --> api: User (or null)
+    deactivate db
+
+    alt User not found
+        api --> nginx: 404 Not Found
+        nginx --> http: 404 Not Found
+        http --> app: Error
+        app --> user: Show "User not found" error
+    else User found
+        api -> api: Update fields if not null
+        api -> db: UPDATE users SET ...
+        activate db
+        db --> api: Updated User
+        deactivate db
+
+        api --> nginx: 200 OK {User}
+        deactivate api
+
+        nginx --> http: 200 OK {User}
+        deactivate nginx
+
+        http --> app: User
+        deactivate http
+
+        app -> dialog: close()
+        app -> app: showSuccess("User updated")
+        app -> app: loadUsers() [refresh table]
+        app --> user: Updated table + success message
+    end
+end
+
+deactivate app
+deactivate browser
+
+@enduml

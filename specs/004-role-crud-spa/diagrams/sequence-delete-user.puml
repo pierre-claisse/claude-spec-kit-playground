@@ -1,0 +1,85 @@
+@startuml sequence-delete-user
+!theme plain
+
+title Sequence: Delete User (US4 - P4)
+
+actor User as user
+participant "Browser" as browser
+participant "AppComponent" as app
+participant "confirm()" as confirm
+participant "HttpClient" as http
+participant "nginx" as nginx
+participant "Backend API" as api
+database "PostgreSQL" as db
+
+user -> browser: Click "Delete" on user row
+activate browser
+
+browser -> app: deleteUser(userId)
+activate app
+
+app -> confirm: confirm("Delete this user?")
+activate confirm
+
+confirm --> user: Show browser confirm dialog
+
+alt User cancels
+    user -> confirm: Cancel
+    confirm --> app: false
+    deactivate confirm
+    app --> user: No action taken
+else User confirms
+    user -> confirm: OK
+    confirm --> app: true
+    deactivate confirm
+
+    app -> http: DELETE /users/{id}
+    activate http
+
+    http -> nginx: DELETE /users/{id}
+    activate nginx
+
+    nginx -> api: DELETE /users/{id} (proxy)
+    activate api
+
+    api -> db: SELECT EXISTS(id)
+    activate db
+    db --> api: exists (boolean)
+    deactivate db
+
+    alt User not found
+        api --> nginx: 404 Not Found
+        nginx --> http: 404 Not Found
+        http --> app: Error
+        app --> user: Show "User not found" error
+    else User found
+        api -> db: DELETE FROM users WHERE id = ?
+        activate db
+        db --> api: OK
+        deactivate db
+
+        api --> nginx: 204 No Content
+        deactivate api
+
+        nginx --> http: 204 No Content
+        deactivate nginx
+
+        http --> app: void
+        deactivate http
+
+        app -> app: showSuccess("User deleted")
+        app -> app: loadUsers() [refresh table]
+        app --> user: Updated table + success message
+    end
+end
+
+deactivate app
+deactivate browser
+
+note over confirm
+    Uses native browser
+    confirm() dialog per spec
+    (simplest implementation)
+end note
+
+@enduml

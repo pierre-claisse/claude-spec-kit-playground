@@ -1,0 +1,77 @@
+@startuml sequence-create-role
+!theme plain
+
+title Sequence: Create Role (US3 - P3)
+
+actor User as user
+participant "Browser" as browser
+participant "AppComponent" as app
+participant "MatDialog" as dialog
+participant "HttpClient" as http
+participant "nginx" as nginx
+participant "Backend API" as api
+database "PostgreSQL" as db
+
+user -> browser: Click "Create New Role"
+activate browser
+
+browser -> app: openRoleCreateDialog()
+activate app
+
+app -> dialog: open(roleFormTemplate)
+activate dialog
+
+dialog --> user: Show form (empty name field)
+deactivate dialog
+
+user -> dialog: Fill name
+user -> dialog: Click Submit
+
+dialog -> app: onRoleSubmit(formData)
+
+alt Validation fails (empty name)
+    app -> app: Show validation error
+    app --> user: "Name is required"
+else Validation passes
+    app -> http: POST /roles {name}
+    activate http
+
+    http -> nginx: POST /roles
+    activate nginx
+
+    nginx -> api: POST /roles (proxy)
+    activate api
+
+    api -> api: Validate @NotBlank
+
+    alt Backend validation fails
+        api --> nginx: 400 Bad Request
+        nginx --> http: 400 Bad Request
+        http --> app: Error
+        app --> user: Show backend error
+    else Backend validation passes
+        api -> db: INSERT INTO roles
+        activate db
+        db --> api: Role (with id)
+        deactivate db
+
+        api --> nginx: 201 Created {Role}
+        deactivate api
+
+        nginx --> http: 201 Created {Role}
+        deactivate nginx
+
+        http --> app: Role
+        deactivate http
+
+        app -> dialog: close()
+        app -> app: showSuccess("Role created")
+        app -> app: loadRoles() [refresh table]
+        app --> user: Updated table + success message
+    end
+end
+
+deactivate app
+deactivate browser
+
+@enduml
